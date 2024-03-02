@@ -11,7 +11,6 @@ class CustomUser(AbstractUser):
     message = models.TextField(blank=True)
     is_verified = models.BooleanField(default=False)
     is_approved = models.BooleanField(default=False)
-    otp = models.CharField(max_length=6, blank=True)
     avatar = models.ImageField(upload_to='avatars/', blank=True)
     gender_choices = [
         ('M', 'Male'),
@@ -19,21 +18,12 @@ class CustomUser(AbstractUser):
         ('O', 'Other'),
     ]
     gender = models.CharField(max_length=1, choices=gender_choices, blank=True)
+    email_verification_token = models.CharField(max_length=100, blank=True, null=True)
+    email_verification_sent_at = models.DateTimeField(null=True, blank=True)
 
-    def send_verification_email(self):
-        otp = get_random_string(length=6, allowed_chars='1234567890')
-        self.otp = otp
-        self.save()
-        subject = 'Verify your email address'
-        message = f'Your OTP is: {otp}'
-        send_mail(subject, message, 'sender@example.com', [self.email])
+    def is_email_verification_token_expired(self):
+        if self.email_verification_sent_at:
+            expiration_time = timezone.timedelta(hours=24)  # 24 hours validity
+            return self.email_verification_sent_at + expiration_time < timezone.now()
+        return True
 
-    def send_approval_notification(self):
-        subject = 'Account Approved'
-        message = 'Your account has been approved by the admin.'
-        send_mail(subject, message, 'sender@example.com', [self.email])
-
-    def send_rejection_notification(self):
-        subject = 'Account Rejected'
-        message = 'Your account registration has been rejected by the admin.'
-        send_mail(subject, message, 'sender@example.com', [self.email])
