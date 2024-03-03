@@ -1,0 +1,58 @@
+{% extends 'user/assets/base.html' %}
+
+{% block title %}Quizes{% endblock %}
+
+{% load custom_filters %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-12">
+        
+        <div class="row">
+            <!-- Recent orders -->
+            <div class="col-md-12">
+              <div class="card shadow eq-card">
+                <div class="card-header">
+                  <strong class="card-title">All Quizes</strong>
+                </div>
+                <div class="card-body">
+                  <table class="table table-hover table-borderless table-striped mt-n3 mb-n1">
+                    <thead>
+                      <tr>
+                        <th>Course Name</th>
+                        <th>Subject Name</th>
+                        <th>Difficulty</th>
+                        <th>Duration</th>
+                        <th>Point Per Q.</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for quiz in quizzes %}
+                        <tr>
+                            <td>{{ quiz.subject.course.name }}</td>
+                            <td>{{ quiz.subject.name }}</td>
+                            <td>{{ quiz.tier }}</td>
+                            <td>{{ quiz.exam_duration }}</td>
+                            <td>{{ quiz.points }}</td>
+                            <td>
+                                {% if participation_status|get_value:quiz.id %}
+                                    <button disabled class="btn btn-danger text-light">Attempted</button>
+                                {% else %}
+                                    <button class="btn btn-success text-light">Attempt Quiz</button>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div> 
+            </div> 
+            
+          </div>
+      </div>
+    </div> 
+  </div> 
+{% endblock %}

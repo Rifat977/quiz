@@ -1,5 +1,7 @@
 from django.db import models
 from django.utils.text import slugify
+from django.conf import settings
+
 
 class Course(models.Model):
     name = models.CharField(max_length=100)
@@ -41,6 +43,7 @@ class QuestionPattern(models.Model):
     tier = models.CharField(max_length=10, choices=TIER_CHOICES)
     exam_duration = models.PositiveIntegerField(default=30)
     points = models.FloatField(default=1.0, verbose_name="Points for each Question")
+    is_featured = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.subject.name} - {self.get_tier_display()}"
@@ -68,3 +71,15 @@ class Question(models.Model):
     class Meta:
         verbose_name = "Question"
         verbose_name_plural = " Questions"
+
+class UserAttempt(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    attempt_count = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.question.text[:50]}"
+
+    class Meta:
+        verbose_name = "User Attempt"
+        verbose_name_plural = "User Attempts"
