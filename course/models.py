@@ -64,6 +64,7 @@ class Question(models.Model):
     option_c = models.CharField(max_length=255, blank=True, null=True)
     option_d = models.CharField(max_length=255, blank=True, null=True)
     correct_answer = models.CharField(max_length=1, choices=[('A', 'A'), ('B', 'B'), ('C', 'C'), ('D', 'D')])
+    visit_count = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.text[:50]
@@ -74,11 +75,11 @@ class Question(models.Model):
 
 class UserAttempt(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    question = models.ForeignKey(QuestionPattern, on_delete=models.CASCADE)
     attempt_count = models.PositiveIntegerField(default=0)
 
     def __str__(self):
-        return f"{self.user.username} - {self.question.text[:50]}"
+        return f"{self.user.username} - {self.question.subject}"
 
     class Meta:
         verbose_name = "User Attempt"

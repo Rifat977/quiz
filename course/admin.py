@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Course, Subject, Question, QuestionPattern
+from .models import Course, Subject, Question, QuestionPattern, UserAttempt
 
 # Register your models here.
 class CourseDisplay(admin.ModelAdmin):
@@ -21,6 +21,8 @@ admin.site.register(Subject, SubjectDisplay)
 admin.site.register(QuestionPattern)
 
 admin.site.register(Question)
+
+admin.site.register(UserAttempt)
 
 
 # class QuestionDisplay(admin.ModelAdmin):

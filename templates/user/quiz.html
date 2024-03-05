@@ -1,0 +1,83 @@
+{% extends 'user/assets/base.html' %}
+
+{% block title %}Quiz Participation{% endblock %}
+
+{% load custom_filters %}
+
+{% block content %}
+
+<form id="quizForm" action="{% url 'core:submit_answer' %}" method="post">
+    {% csrf_token %}
+    <div class="row justify-content-center">
+        <div class="col-12 text-center">
+        <h2 class="page-title">{{ q_pattern.subject.name }} ({{ q_pattern.subject.course.name }})</h2>
+        <p class="">Tier: <span class="text-success">{{ q_pattern.tier|upper }}</span></p>
+        <p class="">Point For Each Correct Answer: {{ q_pattern.points }}</p>
+        <p class="font-weight-bold">Duration: <span id="countdown"></span></p>
+        </div>
+        {% for question in questions %}
+        <input type="hidden" name="question_{{ question.id }}" value="{{question.id}}">
+        <div class="col-md-6 mb-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <p class="mb-2"><strong>{{ question.text }}</strong></p>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="customRadio1_{{ forloop.counter }}" value="A" name="customRadio_{{ question.id }}" class="custom-control-input">
+                        <label class="custom-control-label" for="customRadio1_{{ forloop.counter }}">{{ question.option_a }}</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="customRadio2_{{ forloop.counter }}" value="B" name="customRadio_{{ question.id }}" class="custom-control-input">
+                        <label class="custom-control-label" for="customRadio2_{{ forloop.counter }}">{{ question.option_b }}</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="customRadio3_{{ forloop.counter }}" value="C" name="customRadio_{{ question.id }}" class="custom-control-input">
+                        <label class="custom-control-label" for="customRadio3_{{ forloop.counter }}">{{ question.option_c }}</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="customRadio4_{{ forloop.counter }}" value="D" name="customRadio_{{ question.id }}" class="custom-control-input">
+                        <label class="custom-control-label" for="customRadio4_{{ forloop.counter }}">{{ question.option_d }}</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="col-12 text-center">
+            <button type="submit" class="btn btn-primary">Submit Quiz</button>
+        </div>
+    </div>
+</form>
+
+
+{% endblock %}
+
+{% block script %}
+<script>
+function startCountdown(duration, display) {
+    var timer = duration * 60, minutes, seconds;
+
+    var form = document.getElementById('quizForm');
+
+    var countdownInterval = setInterval(function () {
+        minutes = parseInt(timer / 60, 10);
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display.textContent = minutes + ":" + seconds;
+
+        if (--timer < 0) {
+            clearInterval(countdownInterval); 
+            form.submit();
+        }
+    }, 1000);
+}
+
+window.onload = function () {
+    var durationInMinutes = {{ q_pattern.exam_duration|default:0 }};
+    var display = document.getElementById('countdown');
+    startCountdown(durationInMinutes, display);
+};
+</script>
+{% endblock %}
