@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.text import slugify
 from django.conf import settings
+from django.utils import timezone
 
 
 class Course(models.Model):
@@ -77,6 +78,7 @@ class UserAttempt(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     question = models.ForeignKey(QuestionPattern, on_delete=models.CASCADE)
     attempt_count = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"{self.user.username} - {self.question.subject}"
@@ -84,3 +86,9 @@ class UserAttempt(models.Model):
     class Meta:
         verbose_name = "User Attempt"
         verbose_name_plural = "User Attempts"
+
+class UserAnswer(models.Model):
+    user_attempt = models.ForeignKey(UserAttempt, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    selected_answer = models.CharField(max_length=1)
+    is_correct = models.BooleanField(default=False)

@@ -7,10 +7,11 @@ class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True, error_messages={'required': _('Email field is required.')})
     first_name = forms.CharField(max_length=30, required=True, error_messages={'required': _('First name field is required.')})
     last_name = forms.CharField(max_length=30, required=True, error_messages={'required': _('Last name field is required.')})
+    message = forms.CharField(widget=forms.Textarea, required=True, error_messages={'required': _('Message field is required.')})
 
     class Meta:
         model = CustomUser
-        fields = ['username', 'email', 'first_name', 'last_name', 'password1', 'password2']
+        fields = ['username', 'email', 'first_name', 'last_name', 'password1', 'password2', 'message']
         error_messages = {
             'username': {
                 'required': _('Username field is required.'),

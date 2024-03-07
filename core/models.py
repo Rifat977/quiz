@@ -8,3 +8,7 @@ class Notification(models.Model):
 
     def __str__(self):
         return self.message
+
+class PointSetting(models.Model):
+    per_point = models.FloatField(default=0.0)
+    created_at = models.DateTimeField(auto_now_add=True)

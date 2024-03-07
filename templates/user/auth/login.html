@@ -57,6 +57,9 @@
             {% endif %}
           </div>
           <div class="form-group">
+            <label> <a href="{% url 'account:register' %}">You don't have account?</a> </label>
+          </div>
+          <div class="form-group">
             <label> <a href="{% url 'account:reset_password' %}">Forgot Password?</a> </label>
           </div>
         </form>

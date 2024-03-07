@@ -61,11 +61,17 @@ def login_view(request):
 #registration process
 
 def register(request):
+    courses = Course.objects.filter(status=True)
     if request.user.is_authenticated:
         return redirect('core:home')
 
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
+        course_id = request.POST.get('course')
+        try:
+            course = Course.objects.get(pk=course_id)
+        except Course.DoesNotExist:
+            pass
         if form.is_valid():
             user = form.save(commit=False)
             user.is_active = False
@@ -74,6 +80,7 @@ def register(request):
             token = default_token_generator.make_token(user)
             user.email_verification_token = token
             user.email_verification_sent_at = timezone.now()
+            user.course = course
             user.save()
 
             send_verification_email(user)
@@ -85,7 +92,7 @@ def register(request):
     else:
         form = CustomUserCreationForm()
 
-    return render(request, 'user/auth/register.html', {'form': form})
+    return render(request, 'user/auth/register.html', {'form': form, 'courses':courses})
 
 def send_verification_email(user):
 
@@ -214,7 +221,6 @@ def profile_setting(request):
     courses = Course.objects.all()
     
     if request.method == 'POST':
-        message = request.POST.get('message')
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         old_password = request.POST.get('old_password')
@@ -224,8 +230,8 @@ def profile_setting(request):
 
         errors = {}
 
-        if not message:
-            errors['message'] = 'Message name is required.'
+        #if not message:
+         #   errors['message'] = 'Message name is required.'
 
         if not first_name:
             errors['first_name'] = 'First name is required.'
@@ -247,7 +253,6 @@ def profile_setting(request):
             for field, error_message in errors.items():
                 messages.error(request, error_message)
         else:
-            user.message = message
             user.first_name = first_name
             user.last_name = last_name
             if new_password:

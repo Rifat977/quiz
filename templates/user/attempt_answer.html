@@ -1,0 +1,44 @@
+{% extends 'user/assets/base.html' %}
+
+{% block title %}Attempt Answer{% endblock %}
+
+{% load custom_filters %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12">
+            <div class="col-12 text-center">
+                <h2 class="page-title">Quiz Review</h2>
+            </div>
+            {% for user_answer in user_answers %}
+            <div class="col-md-6 mb-4">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <p class="mb-2"><strong>{{ user_answer.question }}</strong></p>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="customRadio1_{{ forloop.counter }}" value="A" {% if user_answer.selected_answer == 'A' %}checked{% endif %} name="customRadio_{{ user_answer.question.id }}"
+                                class="custom-control-input">
+                            <label class="custom-control-label {% if user_answer.selected_answer == 'A' and user_answer.is_correct %} text-success {% elif user_answer.selected_answer == 'A' %} text-danger {% elif user_answer.question.correct_answer == 'A' %} text-success {% endif %}" for="customRadio1_{{ forloop.counter }}">{{ user_answer.question.option_a }}</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="customRadio2_{{ forloop.counter }}" value="B" {% if user_answer.selected_answer == 'B' %}checked{% endif %} name="customRadio_{{ user_answer.question.id }}"
+                                class="custom-control-input">
+                            <label class="custom-control-label {% if user_answer.selected_answer == 'B' and user_answer.is_correct %} text-success {% elif user_answer.selected_answer == 'B' %} text-danger {% elif user_answer.question.correct_answer == 'B' %} text-success {% endif %}" for="customRadio2_{{ forloop.counter }}">{{ user_answer.question.option_b }}</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="customRadio3_{{ forloop.counter }}" value="C" {% if user_answer.selected_answer == 'C' %}checked{% endif %} name="customRadio_{{ user_answer.question.id }}"
+                                class="custom-control-input">
+                            <label class="custom-control-label {% if user_answer.selected_answer == 'C' and user_answer.is_correct %} text-success {% elif user_answer.selected_answer == 'C' %} text-danger {% elif user_answer.question.correct_answer == 'C' %} text-success {% endif %}" for="customRadio3_{{ forloop.counter }}">{{ user_answer.question.option_c }}</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="customRadio4_{{ forloop.counter }}" value="D" {% if user_answer.selected_answer == 'D' %}checked{% endif %} name="customRadio_{{ user_answer.question.id }}"
+                                class="custom-control-input">
+                            <label class="custom-control-label {% if user_answer.selected_answer == 'D' and user_answer.is_correct %} text-success {% elif user_answer.selected_answer == 'D' %} text-danger {% elif user_answer.question.correct_answer == 'D' %} text-success {% endif %}" for="customRadio4_{{ forloop.counter }}">{{ user_answer.question.option_d }}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

@@ -8,6 +8,7 @@
 
 <form id="quizForm" action="{% url 'core:submit_answer' %}" method="post">
     {% csrf_token %}
+    <input type="hidden" name="q_pattern" value="{{q_pattern.id}}">
     <div class="row justify-content-center">
         <div class="col-12 text-center">
         <h2 class="page-title">{{ q_pattern.subject.name }} ({{ q_pattern.subject.course.name }})</h2>

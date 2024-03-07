@@ -55,11 +55,25 @@
         <div class="form-row">
           <div class="form-group col-md-6">
             <label for="firstname">Firstname</label>
-            <input type="text" id="firstname" name="first_name" required class="form-control">
+            <input type="text" id="firstname" name="first_name"  class="form-control">
           </div>
           <div class="form-group col-md-6">
             <label for="lastname">Lastname</label>
-            <input type="text" id="lastname" name="last_name" required class="form-control">
+            <input type="text" id="lastname" name="last_name"  class="form-control">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="custom-select">Select Course</label>
+            <select class="custom-select" id="custom-select" name="course">
+              {% for course in courses %}
+                <option value="{{course.id}}">{{course.name}}</option>
+              {% endfor %}
+            </select>
+          </div> 
+          <div class="form-group col-md-6">
+            <label for="lastname">Message</label>
+            <textarea name="message" class="form-control"  id="" cols="30" rows="5"></textarea>
           </div>
         </div>
         <hr class="my-4">
@@ -67,11 +81,11 @@
           <div class="col-md-6">
             <div class="form-group">
               <label for="inputPassword5">New Password</label>
-              <input type="password" class="form-control" required name="password1" id="inputPassword5">
+              <input type="password" class="form-control"  name="password1" id="inputPassword5">
             </div>
             <div class="form-group">
               <label for="inputPassword6">Confirm Password</label>
-              <input type="password" name="password2" required class="form-control" id="inputPassword6">
+              <input type="password" name="password2"  class="form-control" id="inputPassword6">
             </div>
           </div>
           <div class="col-md-6">
@@ -86,6 +100,9 @@
           </div>
         </div>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+        <div class="form-group text-center mt-3 mb-3">
+          <label> <a href="{% url 'account:login' %}">Already have account?</a> </label>
+        </div>
         <div class="form-group mt-3">
           {% if messages %}
           <div class="alert alert-danger" role="alert">
