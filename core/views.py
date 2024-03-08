@@ -5,7 +5,7 @@ from course.models import *
 from .models import *
 from django.contrib import messages
 
-import json
+import json, random
 
 # Create your views here.
 def index(request):
@@ -71,8 +71,14 @@ def quiz(request):
             messages.error(request, "You have already attempted this quiz.")
             return redirect("core:home")
         else:
-            questions = Question.objects.filter(pattern=q_pattern, visit_count=0)
-            return render(request, 'user/quiz.html', {'q_pattern': q_pattern, 'questions': questions})
+             user_attempt = UserAttempt.objects.create(user=user, question=q_pattern, attempt_count=1)
+             if q_pattern.random_serve:
+                questions = Question.objects.filter(pattern=q_pattern)
+                total_questions_served = min(q_pattern.total_questions_served, questions.count())
+                questions = random.sample(list(questions), total_questions_served)
+             else:
+                questions = Question.objects.filter(pattern=q_pattern).order_by('id')[:q_pattern.total_questions_served]
+        return render(request, 'user/quiz.html', {'q_pattern': q_pattern, 'questions': questions})
     return redirect("core:home")
 
 
@@ -86,13 +92,11 @@ def submit_answer(request):
 
         q_pattern_id = request.POST.get('q_pattern')
         q_pattern = QuestionPattern.objects.get(pk=q_pattern_id)
-        if UserAttempt.objects.filter(user=user, question=q_pattern).exists():
-            messages.error(request, "You have already attempted this quiz.")
-            return redirect("core:home")
-        else:
-            user_attempt = UserAttempt.objects.create(user=user, question=q_pattern, attempt_count=1)
-
-
+        try:
+            user_attempt = UserAttempt.objects.get(user=user, question=q_pattern, attempt_count=1)
+        except UserAttempt.DoesNotExist:
+                messages.error(request, "Something went wrong!")
+                return redirect("core:home")
         for key, value in request.POST.items():
             if key.startswith('question_'):
                 question_id = int(value)
@@ -142,10 +146,42 @@ def wallet(request):
     user = request.user
     per_point = PointSetting.objects.first()
     total_amount = per_point.per_point * user.point
+    withdrawals = Withdrawal.objects.filter(user=user).order_by('-id')
 
     context = {
         'per_point': per_point,
         'user': user,
         'total_amount': total_amount,
+        'withdrawals': withdrawals
     }
     return render(request, 'user/wallet.html', context)
+
+
+@login_required
+def withdrawal(request):
+    if request.method == 'POST':
+        user = request.user
+        amount = request.POST.get('amount')
+        wallet_address = request.POST.get('wallet_address')
+        payment_method = request.POST.get('payment_method')
+
+        point_setting = PointSetting.objects.first()
+        per_point = point_setting.per_point
+        user_balance = per_point * user.point
+
+        print(user_balance)
+
+
+        if not amount or not wallet_address or not payment_method:
+            messages.error(request, "Input fields must be required")
+            return redirect('core:wallet')
+
+        if int(amount) > user_balance:
+            messages.error(request, "Insuficcent balance.")
+            return redirect('core:wallet')
+        else:
+            withdrawal = Withdrawal(user=user, amount=amount, wallet_address=wallet_address, payment_method=payment_method)
+            withdrawal.save()
+
+        return redirect('core:wallet')
+

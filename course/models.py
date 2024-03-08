@@ -44,7 +44,9 @@ class QuestionPattern(models.Model):
     tier = models.CharField(max_length=10, choices=TIER_CHOICES)
     exam_duration = models.PositiveIntegerField(default=30)
     points = models.FloatField(default=1.0, verbose_name="Points for each Question")
+    random_serve = models.BooleanField(default=False)
     is_featured = models.BooleanField(default=False)
+    total_questions_served = models.PositiveIntegerField(default=0, verbose_name="Total Questions Served")
 
     def __str__(self):
         return f"{self.subject.name} - {self.get_tier_display()}"
@@ -90,5 +92,5 @@ class UserAttempt(models.Model):
 class UserAnswer(models.Model):
     user_attempt = models.ForeignKey(UserAttempt, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    selected_answer = models.CharField(max_length=1)
+    selected_answer = models.CharField(max_length=1, null=True, blank=True)
     is_correct = models.BooleanField(default=False)
