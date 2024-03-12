@@ -124,14 +124,6 @@ def submit_answer(request):
 
         return redirect('core:attempt_answer', user_attempt_id=user_attempt.id)
 
-        # if user_selected_answers and questions:
-        #     correct_answers = {} 
-        #     for question_id, selected_answer in user_selected_answers.items():
-        #         question = questions.get(question_id)
-        #         correct_answers[question_id] = question.correct_answer
-        #     return render(request, 'user/quiz_review.html', {'user_selected_answers': user_selected_answers, 'correct_answers': correct_answers, 'questions': questions, 'score':score})
-        # else:
-        #     return redirect("core:home")
     return redirect("core:home")
 
 @login_required
@@ -163,7 +155,7 @@ def withdrawal(request):
         user = request.user
         amount = request.POST.get('amount')
         wallet_address = request.POST.get('wallet_address')
-        payment_method = request.POST.get('payment_method')
+        network = request.POST.get('network')
 
         point_setting = PointSetting.objects.first()
         per_point = point_setting.per_point
@@ -172,7 +164,7 @@ def withdrawal(request):
         print(user_balance)
 
 
-        if not amount or not wallet_address or not payment_method:
+        if not amount or not wallet_address or not network:
             messages.error(request, "Input fields must be required")
             return redirect('core:wallet')
 
@@ -180,7 +172,7 @@ def withdrawal(request):
             messages.error(request, "Insuficcent balance.")
             return redirect('core:wallet')
         else:
-            withdrawal = Withdrawal(user=user, amount=amount, wallet_address=wallet_address, payment_method=payment_method)
+            withdrawal = Withdrawal(user=user, amount=amount, wallet_address=wallet_address, payment_method=network)
             withdrawal.save()
 
         return redirect('core:wallet')

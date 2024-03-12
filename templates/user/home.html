@@ -47,7 +47,15 @@
                                 </div>
                                 <div class="col">
                                     <h5 class="card-title">{{quiz.subject.course.name}}</h5>
-                                    <p class="card-text">{{ quiz.subject.name }} (<span class="text-success" >{{ quiz.tier|upper }}</span>)</p>
+                                    <p class="card-text">{{ quiz.subject.name }} (
+                                        {% if quiz.tier == 'easy' %}
+                                            <span class="text-success" >{{ quiz.tier|upper }}</span>
+                                        {% elif quiz.tier == 'medium' %}
+                                            <span class="text-warning" >{{ quiz.tier|upper }}</span>
+                                        {% else %}
+                                            <span class="text-danger" >{{ quiz.tier|upper }}</span>
+                                        {% endif %}
+                                        )</p>
                                     <p class="card-text">Point: {{ quiz.points }}</p>
                                 </div> 
                             </div>
@@ -81,7 +89,15 @@
                                                 <div class="modal-body">
                                                     <p class="font-weight-bold ">Course Name: {{quiz.subject.course.name}}</p>
                                                     <p class="font-weight-bold">Subject Name: {{quiz.subject.name}}</p>
-                                                    <p class="font-weight-bold">Difficulty: {{quiz.tier|upper}}</p>
+                                                    <p class="font-weight-bold">Difficulty: 
+                                                        {% if quiz.tier == 'easy' %}
+                                                            <span class="text-success" >{{ quiz.tier|upper }}</span>
+                                                        {% elif quiz.tier == 'medium' %}
+                                                            <span class="text-warning" >{{ quiz.tier|upper }}</span>
+                                                        {% else %}
+                                                            <span class="text-danger" >{{ quiz.tier|upper }}</span>
+                                                        {% endif %}
+                                                    </p>
                                                     <p class="font-weight-bold">Point For Each Question: {{quiz.points}}</p>
                                                     <p class="font-weight-bold">Duration: {{quiz.exam_duration}}</p>
                                                 </div>
