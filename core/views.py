@@ -8,6 +8,7 @@ from django.contrib import messages
 import json, random
 
 from itertools import groupby
+from django.db.models import F, Count, Q
 
 # Create your views here.
 def index(request):
@@ -32,7 +33,7 @@ def home(request):
 
     for quizzes_in_subject in f_quizzes_grouped_by_subject.values():
         for quiz in quizzes_in_subject:
-            attempt = UserAttempt.objects.filter(user=user, question=quiz).first()
+            attempt = UserAttempt.objects.filter(user=user, question=quiz, attempt_count=1).first()
             if attempt:
                 f_participation_status[quiz.id] = True
                 attempt_ids[quiz.id] = attempt.id
@@ -79,7 +80,7 @@ def quiz(request):
         #     messages.error(request, "You have already attempted this quiz.")
         #     return redirect("core:home")
         # else:
-        user_attempt = UserAttempt.objects.get_or_create(user=user, question=q_pattern, attempt_count=1)
+        user_attempt = UserAttempt.objects.get_or_create(user=user, question=q_pattern, attempt_count=0)
         if q_pattern.random_serve:
             questions = Question.objects.filter(pattern=q_pattern)
             total_questions_served = min(q_pattern.total_questions_served, questions.count())
@@ -105,6 +106,10 @@ def submit_answer(request):
         except UserAttempt.DoesNotExist:
                 messages.error(request, "Something went wrong!")
                 return redirect("core:home")
+
+        correct_answers_count = 0
+        total_questions_count = 0 
+
         for key, value in request.POST.items():
             if key.startswith('question_'):
                 question_id = int(value)
@@ -119,8 +124,10 @@ def submit_answer(request):
                         score = question.pattern.points
                         total_score += score
                         is_correct = True
+                        correct_answers_count += 1
                     else:
                         is_correct = True
+                        correct_answers_count += 1
                 else:
                     is_correct = False
 
@@ -133,8 +140,14 @@ def submit_answer(request):
                     }
                 )
 
-        user.point += total_score
+                total_questions_count += 1
+
+        user.point = F('point') + total_score
         user.save()
+
+        if correct_answers_count == total_questions_count:
+            user_attempt.attempt_count = 1
+            user_attempt.save()
 
         return redirect('core:attempt_answer', user_attempt_id=user_attempt.id)
 
@@ -145,7 +158,41 @@ def show_user_answers(request, user_attempt_id):
     user_attempt = UserAttempt.objects.get(pk=user_attempt_id, user=request.user)
     user_answers = UserAnswer.objects.filter(user_attempt=user_attempt)
 
-    return render(request, 'user/attempt_answer.html', {'user_answers': user_answers})
+    total_correct_answers = 0
+    total_skipped_answers = 0
+    total_wrong_answers = 0
+    total_points = 0
+
+    course_name = user_attempt.question.subject.course.name
+    subject_name = user_attempt.question.subject.name
+    course_tier = user_attempt.question.tier
+    points_for_each = user_attempt.question.points
+
+    for user_answer in user_answers:
+        if user_answer.selected_answer == user_answer.question.correct_answer:
+            total_correct_answers += 1
+            total_points += user_answer.question.pattern.points
+        elif not user_answer.selected_answer:
+            total_skipped_answers += 1
+        else:
+            total_wrong_answers += 1
+
+    context = {
+        'user_attempt' : user_attempt,
+        'user_answers': user_answers,
+        'total_correct_answers': total_correct_answers,
+        'total_skipped_answers': total_skipped_answers,
+        'total_wrong_answers': total_wrong_answers,
+        'total_points': total_points,
+        'course_name': course_name,
+        'subject_name': subject_name,
+        'course_tier': course_tier,
+        'points_for_each': points_for_each
+    }
+
+    return render(request, 'user/attempt_answer.html', context)
+
+
 
 @login_required
 def wallet(request):
