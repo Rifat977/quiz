@@ -7,6 +7,8 @@ from django.contrib import messages
 
 import json, random
 
+from itertools import groupby
+
 # Create your views here.
 def index(request):
     return render(request, 'index.html')
@@ -16,23 +18,29 @@ def home(request):
     user = request.user
     user_course = request.user.course
 
-    f_quizzes = QuestionPattern.objects.filter(subject__course=user_course, is_featured=True).select_related('subject__course').all()
+    f_quizzes = QuestionPattern.objects.filter(subject__course=user_course, is_featured=True).select_related('subject__course').order_by('subject__name')
+
+    f_quizzes_grouped_by_subject = {}
+    for subject, quizzes_in_subject in groupby(f_quizzes, lambda quiz: quiz.subject):
+        f_quizzes_grouped_by_subject[subject] = list(quizzes_in_subject)
+
     f_participation_status = {}
 
     notification = Notification.objects.filter(is_active=True).first()
 
     attempt_ids = {}
 
-    for quiz in f_quizzes:
-        attempt = UserAttempt.objects.filter(user=user, question=quiz).first()
-        if attempt:
-            f_participation_status[quiz.id] = True
-            attempt_ids[quiz.id] = attempt.id
-        else:
-            f_participation_status[quiz.id] = False
+    for quizzes_in_subject in f_quizzes_grouped_by_subject.values():
+        for quiz in quizzes_in_subject:
+            attempt = UserAttempt.objects.filter(user=user, question=quiz).first()
+            if attempt:
+                f_participation_status[quiz.id] = True
+                attempt_ids[quiz.id] = attempt.id
+            else:
+                f_participation_status[quiz.id] = False
 
     return render(request, 'user/home.html', {
-        'f_quizzes': f_quizzes,
+        'f_quizzes_grouped_by_subject': f_quizzes_grouped_by_subject,
         'f_participation_status': f_participation_status,
         'notification': notification,
         'attempt_ids': attempt_ids,
@@ -67,17 +75,17 @@ def quiz(request):
         user = request.user
         q_pattern_id = request.POST.get('quiz')
         q_pattern = QuestionPattern.objects.get(pk=q_pattern_id)
-        if UserAttempt.objects.filter(user=user, question=q_pattern).exists():
-            messages.error(request, "You have already attempted this quiz.")
-            return redirect("core:home")
+        # if UserAttempt.objects.filter(user=user, question=q_pattern).exists():
+        #     messages.error(request, "You have already attempted this quiz.")
+        #     return redirect("core:home")
+        # else:
+        user_attempt = UserAttempt.objects.get_or_create(user=user, question=q_pattern, attempt_count=1)
+        if q_pattern.random_serve:
+            questions = Question.objects.filter(pattern=q_pattern)
+            total_questions_served = min(q_pattern.total_questions_served, questions.count())
+            questions = random.sample(list(questions), total_questions_served)
         else:
-             user_attempt = UserAttempt.objects.create(user=user, question=q_pattern, attempt_count=1)
-             if q_pattern.random_serve:
-                questions = Question.objects.filter(pattern=q_pattern)
-                total_questions_served = min(q_pattern.total_questions_served, questions.count())
-                questions = random.sample(list(questions), total_questions_served)
-             else:
-                questions = Question.objects.filter(pattern=q_pattern).order_by('id')[:q_pattern.total_questions_served]
+            questions = Question.objects.filter(pattern=q_pattern).order_by('id')[:q_pattern.total_questions_served]
         return render(request, 'user/quiz.html', {'q_pattern': q_pattern, 'questions': questions})
     return redirect("core:home")
 
@@ -86,14 +94,14 @@ def quiz(request):
 def submit_answer(request):
     if request.method == 'POST':
         user = request.user
-        score = 0
+        total_score = 0
         user_selected_answers = {}
         questions = {} 
 
         q_pattern_id = request.POST.get('q_pattern')
         q_pattern = QuestionPattern.objects.get(pk=q_pattern_id)
         try:
-            user_attempt = UserAttempt.objects.get(user=user, question=q_pattern, attempt_count=1)
+            user_attempt = UserAttempt.objects.get(user=user, question=q_pattern)
         except UserAttempt.DoesNotExist:
                 messages.error(request, "Something went wrong!")
                 return redirect("core:home")
@@ -107,19 +115,25 @@ def submit_answer(request):
                 questions[question_id] = question 
 
                 if selected_answer == question.correct_answer:
-                    score += question.pattern.points 
-                    is_correct = True
+                    if not UserAnswer.objects.filter(user_attempt=user_attempt, question=question, is_correct=True).exists():
+                        score = question.pattern.points
+                        total_score += score
+                        is_correct = True
+                    else:
+                        is_correct = True
                 else:
                     is_correct = False
 
-                UserAnswer.objects.create(
+                UserAnswer.objects.update_or_create(
                     user_attempt=user_attempt,
                     question=question,
-                    selected_answer=selected_answer,
-                    is_correct=is_correct
+                    defaults={
+                        'selected_answer': selected_answer,
+                        'is_correct': is_correct
+                    }
                 )
 
-        user.point += score
+        user.point += total_score
         user.save()
 
         return redirect('core:attempt_answer', user_attempt_id=user_attempt.id)

@@ -26,9 +26,11 @@
     <link rel="stylesheet" href="{% static 'user/css/app-light.css' %}" id="lightTheme">
     <link rel="stylesheet" href="{% static 'user/css/app-dark.css' %}" id="darkTheme" disabled>
     <style>
-      #card.selected {
-          background-color: lightblue; /* Change the background color of selected card */
-          border-color: blue; /* Change the border color of selected card */
+      [id^="option_card_"]:hover{
+        border: 1px rgb(5, 5, 5) solid;
+      }
+      .custom_class {
+        border: 1px rgb(5, 5, 5) solid;
       }
     </style>
   </head>

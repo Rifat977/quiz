@@ -8,7 +8,7 @@ class CourseDisplay(admin.ModelAdmin):
 
 
 class SubjectDisplay(admin.ModelAdmin):
-    list_display = ('course', 'name', 'is_active')
+    list_display = ('name', 'course', 'is_active')
     search_fields = ('course', 'name')
     list_filter = ('course__name', 'name')
     ordering = ('-id',) 

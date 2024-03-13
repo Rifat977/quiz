@@ -20,7 +20,7 @@
                         {% for question in questions %}
                             <div class="col-2">
                                 <li class="nav-item">
-                                    <a style="border: 1px solid #ccc; padding: 3px;" class="nav-link {% if forloop.first %} active text-light {% else %} text-dark {% endif %}" id="questionTab{{ forloop.counter }}-tab" data-toggle="pill" href="#question{{ forloop.counter }}" role="tab" aria-controls="question{{ forloop.counter }}" aria-selected="true">{{ forloop.counter }}</a>
+                                    <a style="border: 1px solid #424040; padding: 3px;" class="nav-link {% if forloop.first %} active text-light {% else %} text-dark {% endif %}" id="questionTab{{ forloop.counter }}-tab" data-toggle="pill" href="#question{{ forloop.counter }}" role="tab" aria-controls="question{{ forloop.counter }}" aria-selected="true">{{ forloop.counter }}</a>
                                 </li>
                             </div>
                             {% if forloop.counter|divisibleby:5 and not forloop.last %}
@@ -54,7 +54,7 @@
                             <p class="mb-2"><strong>{{ question.text }}</strong></p>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <div class="card mb-3">
+                                    <div class="card mb-3" id="option_card_A">
                                         <div class="card-body {% if selected_option == 'A' %} selected {% endif %}" id="optionACard{{ forloop.counter }}">
                                             <div class="custom-control custom-radio">
                                                 <input type="radio" id="customRadio1_{{ forloop.counter }}" value="A" name="customRadio_{{ question.id }}" class="custom-control-input">
@@ -62,8 +62,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="card {% if selected_option == 'C' %} selected {% endif %}" id="optionCCard{{ forloop.counter }}">
-                                        <div class="card-body">
+                                    <div class="card" id="option_card_C">
+                                        <div class="card-body {% if selected_option == 'C' %} selected {% endif %}" id="optionCCard{{ forloop.counter }}">
                                             <div class="custom-control custom-radio">
                                                 <input type="radio" id="customRadio3_{{ forloop.counter }}" value="C" name="customRadio_{{ question.id }}" class="custom-control-input">
                                                 <label class="custom-control-label" for="customRadio3_{{ forloop.counter }}">{{ question.option_c }}</label>
@@ -72,16 +72,16 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="card mb-3 {% if selected_option == 'B' %} selected {% endif %}" id="optionBCard{{ forloop.counter }}">
-                                        <div class="card-body">
+                                    <div class="card mb-3" id="option_card_B">
+                                        <div class="card-body {% if selected_option == 'B' %} selected {% endif %}" id="optionBCard{{ forloop.counter }}">
                                             <div class="custom-control custom-radio">
                                                 <input type="radio" id="customRadio2_{{ forloop.counter }}" value="B" name="customRadio_{{ question.id }}" class="custom-control-input">
                                                 <label class="custom-control-label" for="customRadio2_{{ forloop.counter }}">{{ question.option_b }}</label>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="card {% if selected_option == 'D' %} selected {% endif %}" id="optionDCard{{ forloop.counter }}">
-                                        <div class="card-body">
+                                    <div class="card" id="option_card_D">
+                                        <div class="card-body {% if selected_option == 'D' %} selected {% endif %}" id="optionDCard{{ forloop.counter }}">
                                             <div class="custom-control custom-radio">
                                                 <input type="radio" id="customRadio4_{{ forloop.counter }}" value="D" name="customRadio_{{ question.id }}" class="custom-control-input">
                                                 <label class="custom-control-label" for="customRadio4_{{ forloop.counter }}">{{ question.option_d }}</label>
@@ -110,12 +110,11 @@
 {% endblock %}
 
 {% block script %}
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         var questionTabs = document.querySelectorAll('.nav-link');
         var skipButton = document.getElementById('skipButton');
-
-
 
         // Function to switch to the next tab
         function switchToNextTab() {
@@ -186,7 +185,6 @@
             startCountdown(duration, timer);
         });
 
-        // Start countdown timer when the page loads
         var durationInMinutes = {{ q_pattern.exam_duration|default:0 }};
         var display = document.getElementById('countdown');
         startCountdown(durationInMinutes, display);
