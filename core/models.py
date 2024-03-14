@@ -19,6 +19,8 @@ class Notification(models.Model):
 
 class PointSetting(models.Model):
     per_point = models.FloatField(default=0.0)
+    currency = models.CharField(max_length=100, default='USDT')
+    min_withdrawal = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
 class Withdrawal(models.Model):
@@ -41,12 +43,11 @@ class Withdrawal(models.Model):
 
 @receiver(post_save, sender=Withdrawal)
 def update_user_balance(sender, instance, **kwargs):
-    if instance.status == 'Complete':
-        # Update user's balance
+    if instance.status == 'Reject':
         user = instance.user
         point_setting = PointSetting.objects.first()
         per_point = point_setting.per_point
-        user.point = Decimal(user.point) - Decimal(instance.amount) / Decimal(per_point)
+        user.point = Decimal(user.point) + Decimal(instance.amount) / Decimal(per_point)
         if user.point < 0:
             raise ValidationError("User's balance cannot be negative")
         user.save()

@@ -10,6 +10,9 @@ import json, random
 from itertools import groupby
 from django.db.models import F, Count, Q
 
+from django.core.exceptions import ValidationError
+from decimal import Decimal
+
 # Create your views here.
 def index(request):
     return render(request, 'index.html')
@@ -222,8 +225,6 @@ def withdrawal(request):
         per_point = point_setting.per_point
         user_balance = per_point * user.point
 
-        print(user_balance)
-
 
         if not amount or not wallet_address or not network:
             messages.error(request, "Input fields must be required")
@@ -232,9 +233,22 @@ def withdrawal(request):
         if int(amount) > user_balance:
             messages.error(request, "Insuficcent balance.")
             return redirect('core:wallet')
+
+        if int(amount) < point_setting.min_withdrawal:
+            messages.error(request, f"Minimum withdrawal amount {point_setting.min_withdrawal}.")
+            return redirect('core:wallet')
+
         else:
-            withdrawal = Withdrawal(user=user, amount=amount, wallet_address=wallet_address, payment_method=network)
-            withdrawal.save()
+            point_setting = PointSetting.objects.first()
+            per_point = point_setting.per_point
+            user.point = Decimal(user.point) - Decimal(amount) / Decimal(per_point)
+            if user.point >= 0:
+                user.save()
+
+                withdrawal = Withdrawal(user=user, amount=amount, wallet_address=wallet_address, payment_method=network)
+                withdrawal.save()
+            else:
+                messages.error(request, "Something went wrong.")
 
         return redirect('core:wallet')
 
