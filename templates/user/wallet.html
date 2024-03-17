@@ -32,15 +32,18 @@
                                     </p>
                                     <h3>{{user.point}}</h3>
                                 </div>
-                                <div class="col-md-6 text-center">
+                                <div class="col-md-6 py-3">
+                                    <p class="mb-0"><strong class="mb-0 text-uppercase text-muted">Your Balance</strong>
+                                    </p>
+                                    <h3>{{total_amount}} {{per_point.currency}}</h3>
                                 </div>
                                 <div class="col-md-6 border-top py-3">
                                     <p class="mb-1"><strong class="text-muted">Per Point</strong></p>
                                     <h4 class="mb-0">{{per_point.per_point}} {{per_point.currency}}</h4>
                                 </div> <!-- .col -->
                                 <div class="col-md-6 border-top py-3">
-                                    <p class="mb-1"><strong class="text-muted">Balance</strong></p>
-                                    <h4 class="mb-0">{{total_amount}} {{per_point.currency}}</h4>
+                                    <p class="mb-1"><strong class="text-muted">Minimum Withdrawal Amount</strong></p>
+                                    <h4 class="mb-0">{{per_point.min_withdrawal}}</h4>
                                 </div> <!-- .col -->
                             </div>
                         </div> <!-- .card-body -->
