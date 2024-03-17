@@ -46,7 +46,7 @@
                             <p>Skipped:</p>
                         </div>
                         <div class="col-6 text-right">
-                            <p>0</p>
+                            <p id="skippedCount">0</p>
                         </div>
                     </div>
                     <div class="row">
@@ -54,7 +54,7 @@
                             <p>Attempted:</p>
                         </div>
                         <div class="col-6 text-right">
-                            <p>0</p>
+                            <p>{{user_attempt.attempt_count}}</p>
                         </div>
                     </div>
                 </div>
@@ -146,7 +146,6 @@
         var questionTabs = document.querySelectorAll('.nav-link');
         var skipButton = document.getElementById('skipButton');
 
-        // Function to switch to the next tab
         function switchToNextTab() {
             var activeTab = document.querySelector('.nav-link.active');
             var currentIndex = Array.from(questionTabs).indexOf(activeTab);
@@ -157,10 +156,25 @@
             }
         }
 
-        // Event listener for tab links
+        // var skipButton = document.getElementById('skipButton');
+
+        // var skippedCount = 0;
+
+        // skipButton.addEventListener('click', function() {
+        //     switchToNextTab();
+        //     skippedCount++;
+        //     updateSkippedCount(); 
+        // });
+
+        // function updateSkippedCount() {
+        //     var skippedCountElement = document.getElementById('skippedCount');
+        //     if (skippedCountElement) {
+        //         skippedCountElement.textContent = skippedCount;
+        //     }
+        // }
+
         questionTabs.forEach(function(tab) {
             tab.addEventListener('click', function(event) {
-                // Remove active class from all tabs
                 questionTabs.forEach(function(tab) {
                     tab.classList.remove('active');
                     tab.style.backgroundColor = '';
@@ -168,19 +182,16 @@
                     tab.style.color = 'black';
                 });
 
-                // Add active class to the clicked tab
                 event.target.classList.add('active');
                 event.target.style.backgroundColor = 'rgba(144,238,144,0.5)';
                 event.target.style.borderColor = '#33d17a';
                 event.target.style.color = '#26a269';
 
-                // Hide all tab contents
                 var tabContents = document.querySelectorAll('.tab-pane');
                 tabContents.forEach(function(content) {
                     content.classList.remove('active', 'show');
                 });
 
-                // Show the corresponding tab content
                 var tabContentId = event.target.getAttribute('href');
                 var tabContent = document.querySelector(tabContentId);
                 tabContent.classList.add('active', 'show');
@@ -188,12 +199,10 @@
         });
 
 
-        // Event listener for the skip button
         skipButton.addEventListener('click', function() {
             switchToNextTab();
         });
 
-        // Countdown timer function
         function startCountdown(duration, display) {
             var timer = duration * 60, minutes, seconds;
 
@@ -217,7 +226,7 @@
 
         var timers = document.querySelectorAll('[id^="timer"]');
         timers.forEach(function(timer, index) {
-            var duration = parseInt('{{ q_pattern.exam_duration }}'); // Assuming duration is in minutes
+            var duration = parseInt('{{ q_pattern.exam_duration }}');
             startCountdown(duration, timer);
         });
 

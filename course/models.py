@@ -81,6 +81,7 @@ class UserAttempt(models.Model):
     question = models.ForeignKey(QuestionPattern, on_delete=models.CASCADE)
     attempt_count = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(default=timezone.now)
+    is_correct = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.user.username} - {self.question.subject}"

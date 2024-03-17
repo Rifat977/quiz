@@ -28,18 +28,20 @@ def home(request):
     for subject, quizzes_in_subject in groupby(f_quizzes, lambda quiz: quiz.subject):
         f_quizzes_grouped_by_subject[subject] = list(quizzes_in_subject)
 
-    f_participation_status = {}
 
     notification = Notification.objects.filter(is_active=True).first()
 
     attempt_ids = {}
+    f_participation_status = {}
+    is_all_correct = {}
 
     for quizzes_in_subject in f_quizzes_grouped_by_subject.values():
         for quiz in quizzes_in_subject:
-            attempt = UserAttempt.objects.filter(user=user, question=quiz, attempt_count=1).first()
+            attempt = UserAttempt.objects.filter(user=user, question=quiz).first()
             if attempt:
                 f_participation_status[quiz.id] = True
                 attempt_ids[quiz.id] = attempt.id
+                is_all_correct[quiz.id] = attempt.is_correct
             else:
                 f_participation_status[quiz.id] = False
 
@@ -48,6 +50,7 @@ def home(request):
         'f_participation_status': f_participation_status,
         'notification': notification,
         'attempt_ids': attempt_ids,
+        'is_all_correct' : is_all_correct
     })
 
 @login_required
@@ -55,21 +58,25 @@ def quizes(request):
     user = request.user
     user_course = request.user.course
     quizzes = QuestionPattern.objects.filter(subject__course=user_course).select_related('subject__course').all()
+    
     participation_status = {}
-
     attempt_ids = {}
+    is_all_correct = {}
 
     for quiz in quizzes:
         attempt = UserAttempt.objects.filter(user=user, question=quiz).first()
         if attempt:
             participation_status[quiz.id] = True
             attempt_ids[quiz.id] = attempt.id
+            is_all_correct[quiz.id] = attempt.is_correct
         else:
             participation_status[quiz.id] = False
 
 
     return render(request, 'user/quizes.html', {
-        'quizzes': quizzes, 'participation_status': participation_status, 'attempt_ids': attempt_ids,
+        'quizzes': quizzes, 'participation_status': participation_status,
+        'attempt_ids': attempt_ids,
+        'is_all_correct': is_all_correct
         }
     )
 
@@ -79,18 +86,17 @@ def quiz(request):
         user = request.user
         q_pattern_id = request.POST.get('quiz')
         q_pattern = QuestionPattern.objects.get(pk=q_pattern_id)
-        # if UserAttempt.objects.filter(user=user, question=q_pattern).exists():
-        #     messages.error(request, "You have already attempted this quiz.")
-        #     return redirect("core:home")
-        # else:
-        user_attempt = UserAttempt.objects.get_or_create(user=user, question=q_pattern, attempt_count=0)
+
+        user_attempt = UserAttempt.objects.get_or_create(user=user, question=q_pattern)
+        atm = UserAttempt.objects.get(user=user, question=q_pattern)
         if q_pattern.random_serve:
             questions = Question.objects.filter(pattern=q_pattern)
             total_questions_served = min(q_pattern.total_questions_served, questions.count())
             questions = random.sample(list(questions), total_questions_served)
         else:
             questions = Question.objects.filter(pattern=q_pattern).order_by('id')[:q_pattern.total_questions_served]
-        return render(request, 'user/quiz.html', {'q_pattern': q_pattern, 'questions': questions})
+
+        return render(request, 'user/quiz.html', {'q_pattern': q_pattern, 'questions': questions, 'user_attempt':atm})
     return redirect("core:home")
 
 
@@ -106,6 +112,8 @@ def submit_answer(request):
         q_pattern = QuestionPattern.objects.get(pk=q_pattern_id)
         try:
             user_attempt = UserAttempt.objects.get(user=user, question=q_pattern)
+            user_attempt.attempt_count += 1
+            user_attempt.save()
         except UserAttempt.DoesNotExist:
                 messages.error(request, "Something went wrong!")
                 return redirect("core:home")
@@ -149,7 +157,7 @@ def submit_answer(request):
         user.save()
 
         if correct_answers_count == total_questions_count:
-            user_attempt.attempt_count = 1
+            user_attempt.is_correct = True
             user_attempt.save()
 
         return redirect('core:attempt_answer', user_attempt_id=user_attempt.id)
