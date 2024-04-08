@@ -99,7 +99,7 @@ def send_verification_email(user):
     subject = 'Verify your email address'
     token = user.email_verification_token
     uid = urlsafe_base64_encode(force_bytes(user.pk))
-    verification_url = f"http://127.0.0.1:8000/account/verify-email/{uid}/{token}/"
+    verification_url = f"http://dev.entrancequiz.com/account/verify-email/{uid}/{token}/"
     message = f'Click the following link to verify your email address: {verification_url}'
     send_mail(subject, message, 'sender@example.com', [user.email])
 
