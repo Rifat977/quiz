@@ -143,9 +143,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587 #465
-EMAIL_HOST_USER = 'thetempmail99@gmail.com'
-EMAIL_HOST_PASSWORD = 'gzfi dowa werr kiyq'
-DEFAULT_FROM_EMAIL = 'thetempmail99@gmail.com'
-EMAIL_USE_TLS = True
+EMAIL_HOST = 'mail.entrancequiz.com'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'support@entrancequiz.com'
+EMAIL_HOST_PASSWORD = '@o17Xzq.80UlYS'
+DEFAULT_FROM_EMAIL = 'support@entrancequiz.com'
+EMAIL_USE_SSL = True
