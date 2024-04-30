@@ -101,7 +101,7 @@ def send_verification_email(user):
     uid = urlsafe_base64_encode(force_bytes(user.pk))
     verification_url = f"http://dev.entrancequiz.com/account/verify-email/{uid}/{token}/"
     message = f'Click the following link to verify your email address: {verification_url}'
-    send_mail(subject, message, 'support@entrancequiz.com', [user.email])
+    send_mail(subject, message, 'Entrance Quiz <support@entrancequiz.com>', [user.email])
 
 def verification_sent(request):
     if request.user.is_authenticated:
@@ -162,7 +162,7 @@ def reset_password(request):
                 send_mail(
                     'Password Reset',
                     f'Click the following link to reset your password: {reset_link}',
-                    'support@entrancequiz.com',
+                    'Entrance Quiz <support@entrancequiz.com>',
                     [email],
                     fail_silently=False,
                 )

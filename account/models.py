@@ -49,7 +49,7 @@ def notify_user_on_approval(sender, instance, **kwargs):
             send_mail(
                 'Your profile has been approved',
                 'Your profile has been approved. You can now access the site.',
-                settings.EMAIL_HOST_USER,
+                'Entrance Quiz <support@entrancequiz.com>',
                 [instance.email],
                 fail_silently=False,
             )
