@@ -115,11 +115,12 @@ USE_I18N = True
 USE_TZ = True
 
 JAZZMIN_SETTINGS = {
-    "site_title": "Quiz Admin",
-    "site_header": "Quiz",
-    "site_brand": "Quiz Admin",
-    "welcome_sign": "Welcome to the Quiz",
-    "copyright": "Quiz",
+    "site_title": "Entrance Quiz",
+    "site_header": "Entrance Quiz",
+    "site_brand": "EntranceQuiz",
+    "welcome_sign": "Sign In",
+    "copyright": "Entrance Quiz",
+    "site_logo": "/logo/logo.svg",
 }
 
 
