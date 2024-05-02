@@ -28,7 +28,7 @@
                         {% for question in questions %}
                         <div class="col-2">
                             <li class="nav-item">
-                                <a style="padding: 3px; background-color: {% if forloop.first %} rgba(144,238,144,0.5) {% else %} none {% endif %}; color: {% if forloop.first %} #26a269 {% else %} black {% endif %}; border: 1px solid {% if forloop.first %} #33d17a {% else %} black {% endif %};" class="nav-link font-weight-bold {% if forloop.first %} active {% endif %} " id="questionTab{{ forloop.counter }}-tab" data-toggle="pill" href="#question{{ forloop.counter }}" role="tab" aria-controls="question{{ forloop.counter }}" aria-selected="{% if forloop.first %} true {% else %} false {% endif %}">{{ forloop.counter }}</a>
+                                <a style="padding: 3px; background-color: {% if forloop.first %} rgba(144,238,144,0.5) {% else %} none {% endif %}; color: {% if forloop.first %} #1a6342 {% else %} black {% endif %}; border: 1px solid {% if forloop.first %} #33d17a {% else %} black {% endif %};" class="nav-link font-weight-bold {% if forloop.first %} active {% endif %} " id="questionTab{{ forloop.counter }}-tab" data-toggle="pill" href="#question{{ forloop.counter }}" role="tab" aria-controls="question{{ forloop.counter }}" aria-selected="{% if forloop.first %} true {% else %} false {% endif %}">{{ forloop.counter }}</a>
                             </li>
                         </div>
                         {% if forloop.counter|divisibleby:5 and not forloop.last %}
@@ -81,7 +81,7 @@
                                     <span id="timer{{ forloop.counter }}"></span>
                                 </div>
                             </div>
-                            <p class="mb-2"><strong>{{ question.text }}</strong></p>
+                            <p class="mb-2"><strong>{{ question.text | linebreaks }}</strong></p>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="card mb-3" id="option_card_A">
@@ -185,7 +185,7 @@
                 event.target.classList.add('active');
                 event.target.style.backgroundColor = 'rgba(144,238,144,0.5)';
                 event.target.style.borderColor = '#33d17a';
-                event.target.style.color = '#26a269';
+                event.target.style.color = '#1a6342';
 
                 var tabContents = document.querySelectorAll('.tab-pane');
                 tabContents.forEach(function(content) {

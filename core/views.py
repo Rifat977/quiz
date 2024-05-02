@@ -243,7 +243,7 @@ def withdrawal(request):
             return redirect('core:wallet')
 
         if int(amount) < point_setting.min_withdrawal:
-            messages.error(request, f"Minimum withdrawal amount {point_setting.min_withdrawal}.")
+            messages.error(request, f"Minimum withdrawal amount {point_setting.min_withdrawal} {point_setting.currency}.")
             return redirect('core:wallet')
 
         else:
