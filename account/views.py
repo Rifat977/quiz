@@ -226,6 +226,7 @@ def profile_setting(request):
         old_password = request.POST.get('old_password')
         new_password = request.POST.get('new_password')
         confirm_password = request.POST.get('confirm_password')
+        gender = request.POST.get('gender')
         avatar = request.FILES.get('avatar')
 
         errors = {}
@@ -238,6 +239,9 @@ def profile_setting(request):
 
         if not last_name:
             errors['last_name'] = 'Last name is required.'
+
+        if not gender:
+            errors['gender'] = 'Gender is required.'
 
         if old_password and (not new_password or not confirm_password):
             errors['password'] = 'New password and confirm password are required when changing password.'
@@ -255,6 +259,7 @@ def profile_setting(request):
         else:
             user.first_name = first_name
             user.last_name = last_name
+            user.gender = gender
             if new_password:
                 user.set_password(new_password)
             if avatar:

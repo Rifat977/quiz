@@ -8,10 +8,11 @@ class CustomUserCreationForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=True, error_messages={'required': _('First name field is required.')})
     last_name = forms.CharField(max_length=30, required=True, error_messages={'required': _('Last name field is required.')})
     message = forms.CharField(widget=forms.Textarea, required=True, error_messages={'required': _('Message field is required.')})
+    gender = forms.ChoiceField(choices=CustomUser.gender_choices, required=True, error_messages={'required': _('Gender field is required.')})
 
     class Meta:
         model = CustomUser
-        fields = ['username', 'email', 'first_name', 'last_name', 'password1', 'password2', 'message']
+        fields = ['username', 'email', 'first_name', 'last_name', 'password1', 'password2', 'message', 'gender']
         error_messages = {
             'username': {
                 'required': _('Username field is required.'),
@@ -25,6 +26,7 @@ class CustomUserCreationForm(UserCreationForm):
         super().__init__(*args, **kwargs)
         self.fields['password1'].error_messages = {'required': _('Password field is required.')}
         self.fields['password2'].error_messages = {'required': _('Password confirmation field is required.')}
+        
 
 
     def save(self, commit=True):
@@ -32,6 +34,7 @@ class CustomUserCreationForm(UserCreationForm):
         user.email = self.cleaned_data['email']
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
+        user.gender = self.cleaned_data['gender']
         if commit:
             user.save()
         return user

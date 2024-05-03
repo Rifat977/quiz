@@ -69,43 +69,43 @@
             <textarea name="message" class="form-control"  id="" cols="30" rows="5"></textarea>
           </div>
         </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="custom-select">Gender</label>
+            <select class="custom-select" id="custom-select" name="gender">
+              <option value="">Select Gender</option>
+              <option value="M">Male</option>
+              <option value="F">Female</option>
+              <option value="O">Others</option>
+            </select>
+          </div> 
+        </div>
         <hr class="my-4">
         <div class="row mb-4">
-          <div class="col-md-6">
-            <div class="form-group">
+            <div class="form-group col-md-6">
               <label for="inputPassword5">New Password</label>
               <input type="password" class="form-control"  name="password1" id="inputPassword5">
             </div>
-            <div class="form-group">
+            <div class="form-group col-md-6">
               <label for="inputPassword6">Confirm Password</label>
               <input type="password" name="password2"  class="form-control" id="inputPassword6">
             </div>
-          </div>
-          <div class="col-md-6">
-            <p class="mb-2">Password requirements</p>
-            <p class="small text-muted mb-2"> To create a new password, you have to meet all of the following
-              requirements: </p>
+          {% if messages %}
+          <div class="col-md-12 mt-2">
+            <p class="mb-2">Please Fill The Requirements</p>
             <ul class="small text-muted pl-4 mb-0">
-              <li> Minimum 6 character </li>
-              <li>At least one special character</li>
-              <li>At least one number</li>
+              {% for message in messages %}
+              <li class="alert alert-danger"> {{ message }} </li>
+              {% endfor %}
             </ul>
           </div>
+          {% endif %}
         </div>
         <button class="btn btn-lg btn-block text-light" style="background-color: #6879BB;" type="submit">Sign up</button>
         <div class="form-group text-center mt-3 mb-3">
           <label> <a href="{% url 'account:login' %}" class="text-dark">Already have account?</a> </label>
         </div>
         <a href="{% url 'core:home' %}" class="btn btn-dark btn-block">Back to home</a>
-        <div class="form-group mt-3">
-          {% if messages %}
-          <div class="alert alert-danger" role="alert">
-            {% for message in messages %}
-            <p>{{ message }}</p>
-            {% endfor %}
-          </div>
-          {% endif %}
-        </div>
 
       </form>
     </div>
