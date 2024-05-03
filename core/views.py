@@ -17,6 +17,15 @@ from decimal import Decimal
 def index(request):
     return render(request, 'index.html')
 
+def policy(request):
+    return render(request, 'policy.html')
+
+def feedback(request):
+    return render(request, 'feedback.html')
+
+def contact(request):
+    return render(request, 'contact.html')
+
 @login_required
 def home(request):
     user = request.user

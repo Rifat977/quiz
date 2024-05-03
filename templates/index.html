@@ -1,231 +1,81 @@
+{% extends 'partials/base.html' %}
+
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
 
-  <head>
+{% block title %}Home{% endblock %}
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
-
-    <title>Entrance Quiz</title>
-
-    <link rel="icon" href="{% static 'logo/favicon.ico' %}" type="image/x-icon">
-    <link rel="apple-touch-icon" href="{% static 'logo/favicon.ico' %}">
-
-    <!-- Bootstrap core CSS -->
-    <link href="{% static 'landing_page/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-
-<!--
-
-TemplateMo 570 Chain App Dev
-
-https://templatemo.com/tm-570-chain-app-dev
-
--->
-
-    <!-- Additional CSS Files -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'landing_page/assets/css/templatemo-chain-app-dev.css' %}">
-    <link rel="stylesheet" href="{% static 'landing_page/assets/css/animated.css' %}">
-    <link rel="stylesheet" href="{% static 'landing_page/assets/css/owl.css' %}">
-
-  </head>
-
-<body>
-
-  <!-- ***** Preloader Start ***** -->
-  <div id="js-preloader" class="js-preloader">
-    <div class="preloader-inner">
-      <span class="dot"></span>
-      <div class="dots">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </div>
-  </div>
-  <!-- ***** Preloader End ***** -->
-
-  <!-- ***** Header Area Start ***** -->
-  <header class="header-area header-sticky wow slideInDown" data-wow-duration="0.75s" data-wow-delay="0s">
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <nav class="main-nav">
-            <!-- ***** Logo Start ***** -->
-            <a href="index.html" class="logo">
-              <img src="{% static 'logo/logo.svg' %}" alt="Chain App Dev" style="width: auto; height: 60px;">
-          </a>          
-            <!-- ***** Logo End ***** -->
-            <!-- ***** Menu Start ***** -->
-            <ul class="nav">
-              <li class="scroll-to-section"><a href="#top" style="color: #6879BB;">Home</a></li>
-              <li class="scroll-to-section"><a href="{% url 'account:register' %}">Register</a></li>
-              <li><div class="gradient-button"><a id="modal_trigger" href="{% url 'account:login' %}"><i class="fa fa-sign-in-alt"></i> Sign In Now</a></div></li> 
-            </ul>        
-            <a class='menu-trigger'>
-                <span>Menu</span>
-            </a>
-            <!-- ***** Menu End ***** -->
-          </nav>
-        </div>
-      </div>
-    </div>
-  </header>
-  <!-- ***** Header Area End ***** -->
-
-</div>
-
-  <div class="main-banner wow fadeIn" id="top" data-wow-duration="1s" data-wow-delay="0.5s">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12">
-          <div class="row">
-            <div class="col-lg-6 align-self-center">
-              <div class="left-content show-up header-text wow fadeInLeft" data-wow-duration="1s" data-wow-delay="1s">
-                <div class="row">
-                  <div class="col-lg-12">
-                    <h2>A New Way to Learn</h2>
-                    <p>Entrance Quiz is the best platform to help you enhance your skills, expand your knowledge and prepare for technical interviews.</p>
-                  </div>
+{% block content %}
+<div class="main-banner wow fadeIn" id="top" data-wow-duration="1s" data-wow-delay="0.5s">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="row">
+          <div class="col-lg-6 align-self-center">
+            <div class="left-content show-up header-text wow fadeInLeft" data-wow-duration="1s" data-wow-delay="1s">
+              <div class="row">
+                <div class="col-lg-12">
+                  <h2>A New Way to Learn</h2>
+                  <p>Entrance Quiz is the best platform to help you enhance your skills, expand your knowledge and prepare for technical interviews.</p>
                 </div>
               </div>
             </div>
-            <div class="col-lg-6">
-              <div class="right-image wow fadeInRight" data-wow-duration="1s" data-wow-delay="0.5s">
-                <img src="{% static 'landing_page/assets/images/slider-dec.png' %}" alt="">
-              </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="right-image wow fadeInRight" data-wow-duration="1s" data-wow-delay="0.5s">
+              <img src="{% static 'landing_page/assets/images/slider-dec.png' %}" alt="">
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <div id="services" class="services section">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 offset-lg-2">
-          <div class="section-heading  wow fadeInDown" data-wow-duration="1s" data-wow-delay="0.5s">
-            <h4 style="color: #6879BB;">Amazing Services &amp; Features for you</h4>
-            <img src="{% static 'landing_page/assets/images/heading-line-dec.png' %}" alt="">
-            <p>If you need the greatest collection of HTML templates for your business.</p>
-          </div>
+<div id="services" class="services section">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 offset-lg-2">
+        <div class="section-heading  wow fadeInDown" data-wow-duration="1s" data-wow-delay="0.5s">
+          <h4 style="color: #6879BB;">Amazing Services &amp; Features for you</h4>
+          <img src="{% static 'landing_page/assets/images/heading-line-dec.png' %}" alt="">
+          <p>If you need the greatest collection of HTML templates for your business.</p>
         </div>
       </div>
     </div>
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-4">
-          <div class="service-item first-service">
-            <div class="icon"></div>
-            <h4>Start Exploring</h4>
-            <p>Explore is a well-organized tool that helps you get the most out of LeetCode by providing structure to guide your progress towards the next step in your programming career.</p>
-            <div class="text-button">
-              <a href="#">Read More <i class="fa fa-arrow-right"></i></a>
-            </div>
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="service-item first-service">
+          <div class="icon"></div>
+          <h4>Start Exploring</h4>
+          <p>Explore is a well-organized tool that helps you get the most out of LeetCode by providing structure to guide your progress towards the next step in your programming career.</p>
+          <div class="text-button">
+            <a href="#">Read More <i class="fa fa-arrow-right"></i></a>
           </div>
         </div>
-        <div class="col-lg-4">
-          <div class="service-item second-service">
-            <div class="icon"></div>
-            <h4>Questions, Community & Quiz</h4>
-            <p>Over 3300 questions for you to practice. Come and join one of the largest tech communities with hundreds of thousands of active users and participate in our contests to challenge yourself and earn rewards.</p>
-            <div class="text-button">
-              <a href="#">Read More <i class="fa fa-arrow-right"></i></a>
-            </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="service-item second-service">
+          <div class="icon"></div>
+          <h4>Questions, Community & Quiz</h4>
+          <p>Over 3300 questions for you to practice. Come and join one of the largest tech communities with hundreds of thousands of active users and participate in our contests to challenge yourself and earn rewards.</p>
+          <div class="text-button">
+            <a href="#">Read More <i class="fa fa-arrow-right"></i></a>
           </div>
         </div>
-        <div class="col-lg-4">
-          <div class="service-item third-service">
-            <div class="icon"></div>
-            <h4>Companies & Candidates</h4>
-            <p>Not only does LeetCode prepare candidates for technical interviews, we also help companies identify top technical talent. From sponsoring contests to providing online assessments and training, we offer numerous services to businesses.</p>
-            <div class="text-button">
-              <a href="#">Read More <i class="fa fa-arrow-right"></i></a>
-            </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="service-item third-service">
+          <div class="icon"></div>
+          <h4>Companies & Candidates</h4>
+          <p>Not only does LeetCode prepare candidates for technical interviews, we also help companies identify top technical talent. From sponsoring contests to providing online assessments and training, we offer numerous services to businesses.</p>
+          <div class="text-button">
+            <a href="#">Read More <i class="fa fa-arrow-right"></i></a>
           </div>
         </div>
       </div>
     </div>
   </div>
-
-  <footer id="newsletter">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 offset-lg-2">
-          <div class="section-heading">
-            <h4>Join our mailing list to receive the news &amp; latest trends</h4>
-          </div>
-        </div>
-        <div class="col-lg-6 offset-lg-3">
-          <form id="search" action="#" method="GET">
-            <div class="row">
-              <div class="col-lg-6 col-sm-6">
-                <fieldset>
-                  <input type="address" name="address" class="email" placeholder="Email Address..." autocomplete="on" required>
-                </fieldset>
-              </div>
-              <div class="col-lg-6 col-sm-6">
-                <fieldset>
-                  <button type="submit" class="main-button">Subscribe Now <i class="fa fa-angle-right"></i></button>
-                </fieldset>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-3">
-          <div class="footer-widget">
-            <h4>Contact Us</h4>
-            <p>Rio de Janeiro - RJ, 22795-008, Brazil</p>
-            <p><a href="#">010-020-0340</a></p>
-            <p><a href="#">info@company.co</a></p>
-          </div>
-        </div>
-        <div class="col-lg-3">
-          <div class="footer-widget">
-            
-          </div>
-        </div>
-        <div class="col-lg-3">
-          <div class="footer-widget">
-            
-          </div>
-        </div>
-        <div class="col-lg-3">
-          <div class="footer-widget">
-            <h4>About Our Company</h4>
-            <div class="logo">
-              <img src="{% static 'logo/logo.svg' %}" alt="">
-            </div>
-            <p>If you are passionate about tackling some of the most interesting problems around, we would love to hear from you.</p>
-          </div>
-        </div>
-        <div class="col-lg-12">
-          <div class="copyright-text">
-            <p>Copyright © 2022 Entrance Quiz. All Rights Reserved. 
-                </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-
-  <!-- Scripts -->
-  <script src="{% static 'landing_page/vendor/jquery/jquery.min.js' %}"></script>
-  <script src="{% static 'landing_page/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-  <script src="{% static 'landing_page/assets/js/owl-carousel.js' %}"></script>
-  <script src="{% static 'landing_page/assets/js/animation.js' %}"></script>
-  <script src="{% static 'landing_page/assets/js/imagesloaded.js' %}"></script>
-  <script src="{% static 'landing_page/assets/js/popup.js' %}"></script>
-  <script src="{% static 'landing_page/assets/js/custom.js' %}"></script>
-</body>
-</html>
+</div>
+{% endblock %}
