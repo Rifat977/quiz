@@ -1018,6 +1018,7 @@ Services Style
   border-radius: 10px;
   border-top-right-radius: 50px;
   transition: all .3s;
+  height: 100%; 
 }
 
 .service-item .icon {
@@ -1040,6 +1041,7 @@ Services Style
   transition: all .3s;
   font-size: 15px;
   margin-bottom: 20px;
+  flex-grow: 1;
 }
 
 .service-item:hover h4,
