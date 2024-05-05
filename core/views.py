@@ -13,6 +13,9 @@ from django.db.models import F, Count, Q
 from django.core.exceptions import ValidationError
 from decimal import Decimal
 
+from django.core.mail import send_mail
+
+
 # Create your views here.
 def index(request):
     return render(request, 'index.html')
@@ -24,6 +27,20 @@ def feedback(request):
     return render(request, 'feedback.html')
 
 def contact(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        message = request.POST.get('message')
+
+        if name and email and message:
+            send_mail(
+                'New Contact Us Form Submission',
+                f'Name: {name}\nEmail: {email}\nMessage: {message}',
+                settings.EMAIL_HOST_USER,
+                ['support@entrancequiz.com'],
+                fail_silently=False,
+            )
+        return redirect('core:contact')
     return render(request, 'contact.html')
 
 @login_required
