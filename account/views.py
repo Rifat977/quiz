@@ -6,7 +6,6 @@ from django.contrib.auth.forms import AuthenticationForm
 from .forms import *
 from .models import CustomUser
 from django.contrib.auth.models import User
-from django.core.mail import send_mail
 from django.utils.crypto import get_random_string, constant_time_compare
 
 from django.utils import timezone
@@ -16,6 +15,12 @@ from django.utils.encoding import force_bytes, force_str
 from django.urls import reverse
 
 from course.models import Course
+
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.conf import settings
 
 
 # Create your views here.
@@ -94,14 +99,37 @@ def register(request):
 
     return render(request, 'user/auth/register.html', {'form': form, 'courses':courses})
 
-def send_verification_email(user):
+# def send_verification_email(user):
 
+#     subject = 'Verify your email address'
+#     token = user.email_verification_token
+#     uid = urlsafe_base64_encode(force_bytes(user.pk))
+#     verification_url = f"http://dev.entrancequiz.com/account/verify-email/{uid}/{token}/"
+#     message = f'Click the following link to verify your email address: {verification_url}'
+#     send_mail(subject, message, 'Entrance Quiz <support@entrancequiz.com>', [user.email])
+
+def send_verification_email(user, request=None):
     subject = 'Verify your email address'
     token = user.email_verification_token
     uid = urlsafe_base64_encode(force_bytes(user.pk))
-    verification_url = f"http://dev.entrancequiz.com/account/verify-email/{uid}/{token}/"
-    message = f'Click the following link to verify your email address: {verification_url}'
-    send_mail(subject, message, 'Entrance Quiz <support@entrancequiz.com>', [user.email])
+    
+    domain = settings.BASE_URL
+    
+    verification_url = f"http://{domain}/account/verify-email/{uid}/{token}/"
+    
+    html_message = render_to_string('email/verify_email.html', {
+        'user': user,
+        'verification_url': verification_url
+    })
+    
+    send_mail(
+        subject=subject,
+        message='',
+        from_email='Entrance Quiz <support@entrancequiz.com>',
+        recipient_list=[user.email],
+        fail_silently=False,
+        html_message=html_message
+    )
 
 def verification_sent(request):
     if request.user.is_authenticated:

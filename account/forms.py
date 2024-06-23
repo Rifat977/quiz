@@ -65,7 +65,7 @@ class SetPasswordForm(forms.Form):
         new_password1 = cleaned_data.get('new_password1')
         new_password2 = cleaned_data.get('new_password2')
         if new_password1 and new_password2 and new_password1 != new_password2:
-            raise forms.ValidationError("The two password fields didn't match.")
+            raise forms.ValidationError("Confirm Password didn't match")
         return cleaned_data
 
     def save(self, commit=True):

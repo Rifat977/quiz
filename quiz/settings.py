@@ -20,6 +20,8 @@ AUTH_USER_MODEL = 'account.CustomUser'
 
 LOGIN_URL = '/'
 
+BASE_URL = "127.0.0.1:8000"
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -120,7 +122,7 @@ JAZZMIN_SETTINGS = {
     "site_brand": "EntranceQuiz",
     "welcome_sign": "Sign In",
     "copyright": "Entrance Quiz",
-    "site_logo": "/logo/logo.svg",
+    # "site_logo": "/logo/logo.svg",
 }
 
 

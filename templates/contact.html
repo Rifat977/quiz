@@ -12,10 +12,10 @@
           <div class="section-heading  wow fadeInDown" data-wow-duration="1s" data-wow-delay="0.5s">
             <h4 style="color: #6879BB;">Contact Us</h4>
             <img src="{% static 'landing_page/assets/images/heading-line-dec.png' %}" alt="">
-            <form action="{% url 'core:contact' %}" method="post" class="needs-validation" novalidate>
+            <form action="{% url 'core:contact' %}" method="post" class="needs-validation" id="contactForm" novalidate>
               {% csrf_token %}
               <div class="form-group mb-4">
-                <input type="text" id="name" name="name" placeholder="You Name" class="form-control" required>
+                <input type="text" id="name" name="name" placeholder="Your Name" class="form-control" required>
                 <div class="invalid-feedback">
                   Please provide your name.
                 </div>
@@ -32,15 +32,52 @@
                   Please enter your message.
                 </div>
               </div>
-              <button type="submit" class="btn btn-primary">Send Message</button>
+              <button type="submit" class="bg-none" style="background: transparent; border: none;" id="send"><div class="gradient-button-b">Send Message</div></button>
             </form>
-            
           </div>
         </div>
       </div>
     </div>
-    <div class="container">
-      
+  </div>
+
+  <!-- Toast Message -->
+  <div id="toast" class="toast" style="position: fixed; bottom: 1rem; right: 1rem;">
+    <div class="toast-body">
+      Thank you for contacting us. We will get in touch shortly.
     </div>
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+      var toastEl = document.getElementById('toast');
+      var toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+
+      var form = document.getElementById("contactForm");
+
+      form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        if (form.checkValidity()) {
+          fetch(form.action, {
+            method: form.method,
+            body: new FormData(form),
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest'
+            }
+          }).then(response => {
+            if (response.ok) {
+              toast.show();
+              form.reset();
+            } else {
+              alert('There was a problem with the submission. Please try again.');
+            }
+          }).catch(error => {
+            console.error('Error:', error);
+            alert('There was a problem with the submission. Please try again.');
+          });
+        }
+        form.classList.add('was-validated');
+      });
+    });
+  </script>
+
 {% endblock content %}

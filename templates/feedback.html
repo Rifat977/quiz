@@ -5,21 +5,71 @@
 {% block title %}Feedback{% endblock %}
 
 {% block content %}
-  <div id="services" class="services section">
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <div class="section-heading  wow fadeInDown" data-wow-duration="1s" data-wow-delay="0.5s">
-            <h4 style="color: #6879BB;">Feedback</h4>
-            <img src="{% static 'landing_page/assets/images/heading-line-dec.png' %}" alt="">
-            <p>We value your feedback and are committed to continuously improving our services to better meet your needs. Your thoughts and suggestions are invaluable to us, and we appreciate you taking the time to share your feedback. Whether you have comments, questions, or ideas for improvement, we want to hear from you.</p>
-            <p>Please send email to [Contact Email] your feedback. Rest assured that all feedback is treated with the utmost confidentiality and will only be used for the purpose of improving our services.</p>
-        </div>
+<div id="services" class="services section">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="section-heading wow fadeInDown" data-wow-duration="1s" data-wow-delay="0.5s">
+          <h4 style="color: #6879BB;">Feedback</h4>
+          <img src="{% static 'landing_page/assets/images/heading-line-dec.png' %}" alt="">
+          <p>We value your feedback and are committed to continuously improving our services to better meet your needs.
+            Your thoughts and suggestions are invaluable to us, and we appreciate you taking the time to share your
+            feedback. Whether you have comments, questions, or ideas for improvement, we want to hear from you.</p>
+          <p>Please send email to <button id="contact-email" class="btn btn-link p-0">[Contact Email]</button> your feedback. Rest assured that
+            all feedback is treated with the utmost confidentiality and will only be used for the purpose of improving
+            our services.</p>
         </div>
       </div>
     </div>
-    <div class="container">
-      
+  </div>
+</div>
+
+<!-- Feedback Form Modal -->
+<div class="modal fade" id="feedbackModal" tabindex="-1" role="dialog" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="feedbackModalLabel">Feedback Form</h5>
+      </div>
+      <div class="modal-body">
+        <form id="feedbackForm">
+          <div class="form-group">
+            <textarea id="feedback" name="feedback" class="form-control" rows="4" placeholder="Enter your feedback here..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary mt-2">Submit</button>
+        </form>
+      </div>
     </div>
   </div>
+</div>
+
+<!-- Toast Message -->
+<div id="toast" class="toast" style="position: fixed; bottom: 1rem; right: 1rem;">
+  <div class="toast-body">
+    Thank you for your valuable feedback, we'll look closely at what you've said and see how we can improve things.
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', (event) => {
+    var toastEl = document.getElementById('toast');
+    var toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+
+    var form = document.getElementById("feedbackForm");
+    var btn = document.getElementById("contact-email");
+
+    btn.onclick = function () {
+      $('#feedbackModal').modal('show');
+    }
+
+    form.onsubmit = function (event) {
+      event.preventDefault();
+      // Simulate feedback submission
+      setTimeout(function () {
+        $('#feedbackModal').modal('hide');
+        toast.show();
+      }, 500);
+    }
+  });
+</script>
 {% endblock content %}
