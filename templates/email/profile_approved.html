@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Your profile is approved!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+        .email-container {
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            max-width: 600px;
+            margin: auto;
+        }
+        .email-header {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .email-body {
+            margin-top: 20px;
+        }
+        .email-footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #777;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        ul {
+            list-style: disc;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="email-body">
+            <p>Dear {{ user.first_name }} {{ user.last_name }},</p>
+            <p>We are pleased to inform you that your profile has been approved and is now active! You can now log in to your account and start accessing quizes and resources available to you.</p>
+            <p><a href="https://entrancequiz.com/account/login" style="display: inline-block; padding: 10px 20px; font-size: 16px; color: white; background-color: #6879BB; text-decoration: none; border-radius: 5px;">Log In</a></p>
+            <p>Welcome once again, and let’s achieve great things together!</p>
+        </div>
+        <div class="email-footer">
+            Best regards,<br>
+            Entrance Quiz
+        </div>
+    </div>
+</body>
+</html>

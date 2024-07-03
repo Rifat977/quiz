@@ -43,7 +43,7 @@
                         <div class="row">
                             {% for quiz in quizzes %}
                                 <div class="col-md-6 col-xl-4 mb-4">
-                                    <div class="card shadow border-0">
+                                    <div class="card shadow">
                                         <div class="card-body">
                                             <div class="row align-items-center">
                                                 <div class="col-4 text-center">
@@ -67,7 +67,7 @@
 
                                                     {% if f_participation_status|get_value:quiz.id %}
                                                         {% if not is_all_correct|get_value:quiz.id %}
-                                                            <button class="btn btn-success btn-sm" type="button" data-toggle="modal" data-target="#verticalModal_{{quiz.id}}">Attempt Quiz</button>
+                                                            <button class="btn btn-success btn-sm" type="button" data-toggle="modal" data-target="#verticalModal_{{quiz.id}}" style="color: white !important;">Attempt Quiz</button>
                                                             {% if attempt_ids|get_item:quiz.id %}
                                                                 <a href="{% url 'core:attempt_answer' user_attempt_id=attempt_ids|get_item:quiz.id %}">
                                                                     <button class="btn btn-info btn-sm" type="button">View Result</button>
@@ -82,7 +82,7 @@
                                                             {% endif %}
                                                         {% endif %}
                                                     {% else %}
-                                                        <button class="btn btn-success btn-sm" type="button" data-toggle="modal" data-target="#verticalModal_{{quiz.id}}">Attempt Quiz</button>
+                                                        <button class="btn btn-success btn-sm" type="button" data-toggle="modal" data-target="#verticalModal_{{quiz.id}}" style="color: white !important;">Attempt Quiz</button>
                                                     {% endif %}
 
 
@@ -91,7 +91,7 @@
                                                         <div class="modal-dialog modal-dialog-centered" role="document">
                                                             <div class="modal-content">
                                                                 <div class="modal-header bg-dark">
-                                                                    <h5 class="modal-title text-light" id="verticalModalTitle">Quiz Details</h5>
+                                                                    <h5 class="modal-title text-light" style="color: white !important;" id="verticalModalTitle">Quiz Details</h5>
                                                                     <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
                                                                         <span aria-hidden="true">&times;</span>
                                                                     </button>
@@ -141,7 +141,7 @@
                                                                         {% csrf_token %}
                                                                         <input type="hidden" name="quiz" value="{{ quiz.id }}">
                                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                                        <button type="submit" class="btn btn-success text-light">Start Quiz</button>
+                                                                        <button type="submit" class="btn btn-success text-light" style="color: white !important;">Start Quiz</button>
                                                                     </form>
                                                                 </div>
                                                             </div>                                                            

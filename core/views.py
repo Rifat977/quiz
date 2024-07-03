@@ -229,8 +229,6 @@ def show_user_answers(request, user_attempt_id):
 
     return render(request, 'user/attempt_answer.html', context)
 
-
-
 @login_required
 def wallet(request):
     user = request.user

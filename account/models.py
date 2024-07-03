@@ -7,6 +7,11 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.conf import settings
 
+from django.utils.html import strip_tags
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     phone_number = models.CharField(max_length=15, blank=True)
@@ -46,10 +51,17 @@ def notify_user_on_approval(sender, instance, **kwargs):
             return
 
         if instance.is_approved and not old_instance.is_approved and instance.is_verified:
-            send_mail(
-                'Your profile has been approved',
-                'Your profile has been approved. You can now access the site.',
-                'Entrance Quiz <support@entrancequiz.com>',
-                [instance.email],
-                fail_silently=False,
-            )
+            # send_mail(
+            #     'Your profile has been approved',
+            #     'Your profile has been approved. You can now access the site.',
+            #     'Entrance Quiz <support@entrancequiz.com>',
+            #     [instance.email],
+            #     fail_silently=False,
+            # )
+
+            subject = f"Your profile has been approved"
+            html_content = render_to_string('email/profile_approved.html', {
+                'user': instance,
+            })
+            text_content = strip_tags(html_content)
+            send_mail(subject, text_content, 'Entrance Quiz <support@entrancequiz.com>', [instance.email], html_message=html_content)
