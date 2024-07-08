@@ -91,16 +91,19 @@
               <label for="inputPassword6">Confirm Password</label>
               <input type="password" name="password2"  class="form-control" id="inputPassword6">
             </div>
-          {% if messages %}
-          <div class="col-md-12 mt-2">
-            <p class="mb-2">Please Fill The Requirements</p>
-            <ul class="small text-muted pl-4 mb-0">
-              {% for message in messages %}
-              <li class="alert alert-danger"> {{ message }} </li>
-              {% endfor %}
-            </ul>
-          </div>
-          {% endif %}
+            
+            {% if form.errors %}
+            <div class="col-md-12 mt-2">
+                <p class="mb-2">Please Fill The Requirements</p>
+                <ul class="small text-muted pl-4 mb-0">
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <li class="alert alert-danger">{{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}        
         </div>
         <button class="btn btn-lg btn-block text-light" style="background-color: #6879BB;" type="submit">Sign up</button>
         <div class="form-group text-center mt-3 mb-3">

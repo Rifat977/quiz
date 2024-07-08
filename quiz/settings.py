@@ -122,7 +122,11 @@ JAZZMIN_SETTINGS = {
     "site_brand": "EntranceQuiz",
     "welcome_sign": "Sign In",
     "copyright": "Entrance Quiz",
-    # "site_logo": "/logo/logo.svg",
+    
+    "site_logo": "/logo/icon_logo.png",
+    "site_icon" : "logo/favicon.png",
+    "login_logo" : "/logo/logo.svg",
+    "site_logo_classes": "img-circle",
 }
 
 

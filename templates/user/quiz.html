@@ -125,14 +125,15 @@
                 </div>
                 {% endfor %}
             </div>
-                <div class="col-12 text-center mt-3">
-                    <div class="card">
-                        <div class="card-body d-flex justify-content-between">
-                            <button type="button" class="btn btn-outline-secondary text-dark" id="skipButton">Skip</button>
-                            <button type="submit" class="btn btn-success text-light">Submit Quiz</button>
-                        </div>
+            <div class="col-12 text-center mt-3">
+                <div class="card">
+                    <div class="card-body d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary" style="color: white;" id="prevButton" disabled>Previous</button>
+                        <button type="button" class="btn btn-secondary" style="color: white;" id="skipButton">Skip</button>
+                        <button type="submit" class="btn btn-success text-light">Submit Quiz</button>
                     </div>
                 </div>
+            </div>            
         </form>
     </div>
 </div>
@@ -140,38 +141,49 @@
 {% endblock %}
 
 {% block script %}
-
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        var questionTabs = document.querySelectorAll('.nav-link');
+        var questionTabs = document.querySelectorAll('.nav-link[data-toggle="pill"]');
         var skipButton = document.getElementById('skipButton');
+        var prevButton = document.getElementById('prevButton');
 
         function switchToNextTab() {
             var activeTab = document.querySelector('.nav-link.active');
+            if (!activeTab) return; // Exit function if no active tab is found
+
             var currentIndex = Array.from(questionTabs).indexOf(activeTab);
             var nextIndex = currentIndex + 1;
             if (nextIndex < questionTabs.length) {
                 var nextTabLink = questionTabs[nextIndex];
                 nextTabLink.click();
+                // Enable the previous button after skipping to the next question
+                prevButton.disabled = false;
+                // Enable skip button as long as there are more questions
+                skipButton.disabled = false;
+            } else {
+                // Disable skip button if no more questions
+                skipButton.disabled = true;
             }
         }
+        
+        function switchToPrevTab() {
+            var activeTab = document.querySelector('.nav-link.active');
+            if (!activeTab) return; // Exit function if no active tab is found
 
-        // var skipButton = document.getElementById('skipButton');
-
-        // var skippedCount = 0;
-
-        // skipButton.addEventListener('click', function() {
-        //     switchToNextTab();
-        //     skippedCount++;
-        //     updateSkippedCount(); 
-        // });
-
-        // function updateSkippedCount() {
-        //     var skippedCountElement = document.getElementById('skippedCount');
-        //     if (skippedCountElement) {
-        //         skippedCountElement.textContent = skippedCount;
-        //     }
-        // }
+            var currentIndex = Array.from(questionTabs).indexOf(activeTab);
+            var prevIndex = currentIndex - 1;
+            if (prevIndex >= 0) {
+                var prevTabLink = questionTabs[prevIndex];
+                prevTabLink.click();
+                // Enable the skip button after going back to the previous question
+                skipButton.disabled = false;
+                // Enable previous button as long as there are previous questions
+                prevButton.disabled = false;
+            } else {
+                // Disable prev button if no previous questions
+                prevButton.disabled = true;
+            }
+        }
 
         questionTabs.forEach(function(tab) {
             tab.addEventListener('click', function(event) {
@@ -195,13 +207,30 @@
                 var tabContentId = event.target.getAttribute('href');
                 var tabContent = document.querySelector(tabContentId);
                 tabContent.classList.add('active', 'show');
+
+                // Enable both prev and skip buttons whenever a tab is clicked
+                prevButton.disabled = false;
+                skipButton.disabled = false;
             });
         });
 
-
-        skipButton.addEventListener('click', function() {
+        skipButton.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent the default form submission behavior
             switchToNextTab();
         });
+
+        prevButton.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent the default form submission behavior
+            switchToPrevTab();
+        });
+
+        // Initially disable prev button if on the first question
+        prevButton.disabled = true;
+
+        // Disable skip button initially if there's only one question
+        if (questionTabs.length <= 1) {
+            skipButton.disabled = true;
+        }
 
         function startCountdown(duration, display) {
             var timer = duration * 60, minutes, seconds;

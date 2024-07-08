@@ -27,13 +27,14 @@ class CustomUserCreationForm(UserCreationForm):
         self.fields['password1'].error_messages = {'required': _('Password field is required.')}
         self.fields['password2'].error_messages = {'required': _('Password confirmation field is required.')}
 
-    def validate(self):
-        cleaned_data = super().clean()
-        password1 = cleaned_data.get('password1')
-        password2 = cleaned_data.get('password2')
+    def clean_password2(self):
+        password1 = self.cleaned_data.get('password1')
+        password2 = self.cleaned_data.get('password2')
+
         if password1 and password2 and password1 != password2:
-            raise forms.ValidationError(_("Confirm Password didn't match"))
-        return cleaned_data
+            raise forms.ValidationError(_("The passwords do not match. Please try again."), code='password_mismatch')
+
+        return password2
 
     def save(self, commit=True):
         user = super(CustomUserCreationForm, self).save(commit=False)
