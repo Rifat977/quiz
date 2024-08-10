@@ -187,20 +187,38 @@ def reset_password(request):
                 uid = urlsafe_base64_encode(force_bytes(user.pk))
 
                 reset_link = reset_url = request.build_absolute_uri(f"/account/new-password/{uid}/{token}/")
+                # send_mail(
+                #     'Password Reset',
+                #     f'Click the following link to reset your password: {reset_link}',
+                #     'Entrance Quiz <support@entrancequiz.com>',
+                #     [email],
+                #     fail_silently=False,
+                # )
+
+                html_message = render_to_string('email/verify_email.html', {
+                    'user': user,
+                    'reset_link': reset_link
+                })
+
+                subject = 'Password reset - Entrancequiz'
+
+                
                 send_mail(
-                    'Password Reset',
-                    f'Click the following link to reset your password: {reset_link}',
-                    'Entrance Quiz <support@entrancequiz.com>',
-                    [email],
+                    subject=subject,
+                    message='',
+                    from_email='Entrance Quiz <support@entrancequiz.com>',
+                    recipient_list=[user.email],
                     fail_silently=False,
+                    html_message=html_message
                 )
+
                 messages.success(request, 'A password reset link has been sent to your email.')
                 return redirect('account:confirm_password')
             else:
                 messages.error(request, 'No user found with that email address.')
     else:
         form = PasswordResetForm()
-    return render(request, 'user/auth/reset_password.html')
+    return render(request, 'user/auth/reset_password.html', {'form': form})
 
 def confirm_password(request):
     if request.user.is_authenticated:

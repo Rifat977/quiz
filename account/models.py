@@ -59,7 +59,7 @@ def notify_user_on_approval(sender, instance, **kwargs):
             #     fail_silently=False,
             # )
 
-            subject = f"Your profile has been approved"
+            subject = f"Profile Approved"
             html_content = render_to_string('email/profile_approved.html', {
                 'user': instance,
             })
