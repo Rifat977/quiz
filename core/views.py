@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 
 from course.models import *
 from .models import *
+from .decorators import logout_if_superadmin
 from django.contrib import messages
 
 import json, random
@@ -44,6 +45,7 @@ def contact(request):
     return render(request, 'contact.html')
 
 @login_required
+@logout_if_superadmin
 def home(request):
     user = request.user
     user_course = request.user.course
@@ -80,6 +82,7 @@ def home(request):
     })
 
 @login_required
+@logout_if_superadmin
 def quizes(request):
     user = request.user
     user_course = request.user.course
@@ -107,6 +110,7 @@ def quizes(request):
     )
 
 @login_required
+@logout_if_superadmin
 def quiz(request):
     if request.method == 'POST':
         user = request.user
@@ -127,6 +131,7 @@ def quiz(request):
 
 
 @login_required
+@logout_if_superadmin
 def submit_answer(request):
     if request.method == 'POST':
         user = request.user
@@ -191,6 +196,7 @@ def submit_answer(request):
     return redirect("core:home")
 
 @login_required
+@logout_if_superadmin
 def show_user_answers(request, user_attempt_id):
     user_attempt = UserAttempt.objects.get(pk=user_attempt_id, user=request.user)
     user_answers = UserAnswer.objects.filter(user_attempt=user_attempt)
@@ -230,6 +236,7 @@ def show_user_answers(request, user_attempt_id):
     return render(request, 'user/attempt_answer.html', context)
 
 @login_required
+@logout_if_superadmin
 def wallet(request):
     user = request.user
     per_point = PointSetting.objects.first()
@@ -246,6 +253,7 @@ def wallet(request):
 
 
 @login_required
+@logout_if_superadmin
 def withdrawal(request):
     if request.method == 'POST':
         user = request.user
