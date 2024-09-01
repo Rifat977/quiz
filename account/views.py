@@ -115,7 +115,7 @@ def send_verification_email(user, request=None):
     
     domain = settings.BASE_URL
     
-    verification_url = f"http://{domain}/account/verify-email/{uid}/{token}/"
+    verification_url = f"{domain}/account/verify-email/{uid}/{token}/"
     
     html_message = render_to_string('email/verify_email.html', {
         'user': user,
