@@ -5,10 +5,6 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-&=ok5auj%o&+@*i43$9mr4m52i%4oocz(00w_%t_=dvuhb$#9)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -20,7 +16,7 @@ AUTH_USER_MODEL = 'account.CustomUser'
 
 LOGIN_URL = '/'
 
-BASE_URL = "127.0.0.1:8000"
+BASE_URL = "https://entrancequiz.com/"
 
 # Application definition
 
