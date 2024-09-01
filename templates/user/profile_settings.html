@@ -30,11 +30,11 @@
             {% csrf_token %}
             <div class="row mt-5 align-items-center">
               <div class="col-md-3 text-center mb-5">
-                <div class="avatar avatar-xl" id="avatar-container">
+                  <div class="avatar avatar-xl" id="avatar-container">
                     {% if user.avatar %}
-                        <img src="{{ user.avatar.url }}" alt="..." class="avatar-img rounded-circle">
+                        <img id="avatar-preview" src="{{ user.avatar.url }}" alt="..." class="avatar-img rounded-circle">
                     {% else %}
-                        <img src="{% static 'user/./assets/avatars/avatar.jpg' %}" alt="..." class="avatar-img rounded-circle">
+                        <img id="avatar-preview" src="{% static 'user/./assets/avatars/avatar.jpg' %}" alt="..." class="avatar-img rounded-circle">
                     {% endif %}
                     <div class="avatar-overlay mt-3">
                         <label for="avatar-upload" class="avatar-overlay-button">
@@ -121,4 +121,19 @@
       </div> <!-- /.col-12 -->
     </div> <!-- .row -->
   </div>
+{% endblock %}
+
+{% block script %}
+<script>
+  document.getElementById('avatar-upload').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('avatar-preview').src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
 {% endblock %}
