@@ -16,7 +16,7 @@ AUTH_USER_MODEL = 'account.CustomUser'
 
 LOGIN_URL = '/'
 
-BASE_URL = "https://entrancequiz.com/"
+BASE_URL = "https://entrancequiz.com"
 
 # Application definition
 
