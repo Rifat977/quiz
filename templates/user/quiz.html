@@ -17,6 +17,19 @@
         border-radius: 5px;
     }
 
+    .attempted {
+        background-color: rgba(144,238,144,0.5) !important;
+        color: #1a6342 !important;
+        border-color: #33d17a !important;
+    }
+
+    .skipped {
+        background-color: lightgray !important;
+        color: darkgray !important;
+        border-color: gray !important;
+    }
+
+
 </style>
 {% endblock %}
 
@@ -62,10 +75,10 @@
                             <p>Attempted:</p>
                         </div>
                         <div class="col-6 text-right">
-                            <p>{{user_attempt.attempt_count}}</p>
+                            <p id="attemptedCount">{{ user_attempt.attempt_count }}</p>
                         </div>
                     </div>
-                </div>
+                </div>                
                 
             </div>
         </div>
@@ -155,6 +168,10 @@
         var questionTabs = document.querySelectorAll('.nav-link[data-toggle="pill"]');
         var skipButton = document.getElementById('skipButton');
         var prevButton = document.getElementById('prevButton');
+        var attemptedCount = document.getElementById('attemptedCount');
+        var skippedCount = document.getElementById('skippedCount');
+        var totalAttempted = 0;
+        var totalSkipped = 0;
 
         function switchToNextTab() {
             var activeTab = document.querySelector('.nav-link.active');
@@ -173,6 +190,10 @@
                 // Disable skip button if no more questions
                 skipButton.disabled = true;
             }
+            var currentQuestionInput = document.querySelector(`#question${currentIndex + 1} input[type="radio"]:checked`);
+                if (!currentQuestionInput) {
+                    markAsSkipped(activeTab);
+                }
         }
         
         function switchToPrevTab() {
@@ -192,6 +213,19 @@
                 // Disable prev button if no previous questions
                 prevButton.disabled = true;
             }
+        }
+
+        function markAsAttempted(tab) {
+            tab.classList.remove('skipped');
+            tab.classList.add('attempted');
+            totalAttempted++;
+            attemptedCount.textContent = totalAttempted;
+        }
+
+        function markAsSkipped(tab) {
+            tab.classList.add('skipped');
+            totalSkipped++;
+            skippedCount.textContent = totalSkipped;
         }
 
         questionTabs.forEach(function(tab) {
@@ -240,6 +274,19 @@
         if (questionTabs.length <= 1) {
             skipButton.disabled = true;
         }
+
+        // Listen to the form's radio inputs to mark the question as attempted
+        document.querySelectorAll('input[type="radio"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                var tabId = this.closest('.tab-pane').getAttribute('id').replace('question', '');
+                var tab = document.querySelector(`#questionTab${tabId}-tab`);
+                markAsAttempted(tab);
+            });
+        });
+
+        // Initialize counters
+        attemptedCount.textContent = totalAttempted;
+        skippedCount.textContent = totalSkipped;
 
         function startCountdown(duration, display) {
             var timer = duration * 60, minutes, seconds;
