@@ -48,19 +48,19 @@
           <div class="checkbox mb-3">
             <label><input type="checkbox" value="remember-me"> Stay logged in </label>
           </div>
-          <button class="btn btn-lg text-light btn-block mb-3 shadow" style="background-color: #6879BB;" type="submit">Let me in</button>
-          {% if form.errors %}
+
+          {% if messages %}
             <div class="col-md-12 mt-2">
-                <p class="mb-2">Please Fill The Requirements</p>
-                <ul class="small text-muted pl-4 mb-0">
-                    {% for field, errors in form.errors.items %}
-                        {% for error in errors %}
-                            <li class="alert alert-danger">{{ error }}</li>
-                        {% endfor %}
-                    {% endfor %}
-                </ul>
+              {% for message in messages %}
+                  <p class="alert alert-danger">{{ message }}</p>
+              {% endfor %}
             </div>
-            {% endif %}    
+          {% endif %}
+
+          <button class="btn btn-lg text-light btn-block mb-3 shadow" style="background-color: #6879BB;" type="submit">Let me in</button>
+          
+
+
           <div class="form-group">
             <label> <a href="{% url 'account:register' %}" class="text-dark">You don't have account?</a> </label>
           </div>

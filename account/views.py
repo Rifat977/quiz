@@ -179,8 +179,9 @@ def reset_password(request):
             email = form.cleaned_data['email']
             try:
                 user = CustomUser.objects.get(email=email)
-            except User.DoesNotExist:
-                user = None
+            except CustomUser.DoesNotExist:  # Update the exception to match CustomUser
+                messages.error(request, 'No user found with that email address.')  # User-friendly error message
+                return redirect('account:reset_password')  # Redirect back to the reset password page
             
             if user is not None:
                 token = default_token_generator.make_token(user)
@@ -195,7 +196,7 @@ def reset_password(request):
                 #     fail_silently=False,
                 # )
 
-                html_message = render_to_string('email/verify_email.html', {
+                html_message = render_to_string('email/password_reset.html', {
                     'user': user,
                     'reset_link': reset_link
                 })
